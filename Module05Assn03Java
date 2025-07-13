@@ -1,0 +1,74 @@
+import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+
+public class ColorSelector extends Application {
+
+    @Override
+    public void start(Stage primaryStage) {
+        Text sampleText = new Text("Show Colors");
+        sampleText.setFont(Font.font("Arial", 28));
+        sampleText.setFill(Color.BLACK);
+
+        Slider redSlider = createSlider(0, 255, 0);
+        Slider greenSlider = createSlider(0, 255, 0);
+        Slider blueSlider = createSlider(0, 255, 255);
+        Slider opacitySlider = createSlider(0, 100, 100);
+
+        Label redValue = new Label("0");
+        Label greenValue = new Label("0");
+        Label blueValue = new Label("255");
+        Label opacityValue = new Label("100");
+
+        ChangeListener<Number> colorChangeListener = (obs, oldVal, newVal) -> {
+            int r = (int) redSlider.getValue();
+            int g = (int) greenSlider.getValue();
+            int b = (int) blueSlider.getValue();
+            double o = opacitySlider.getValue() / 100.0;
+            sampleText.setFill(Color.rgb(r, g, b, o));
+            redValue.setText(String.valueOf(r));
+            greenValue.setText(String.valueOf(g));
+            blueValue.setText(String.valueOf(b));
+            opacityValue.setText(String.valueOf((int) opacitySlider.getValue()));
+        };
+
+        redSlider.valueProperty().addListener(colorChangeListener);
+        greenSlider.valueProperty().addListener(colorChangeListener);
+        blueSlider.valueProperty().addListener(colorChangeListener);
+        opacitySlider.valueProperty().addListener(colorChangeListener);
+
+        GridPane grid = new GridPane();
+        grid.setAlignment(Pos.CENTER);
+        grid.setPadding(new Insets(25));
+        grid.setVgap(15);
+        grid.setHgap(10);
+
+        grid.add(sampleText, 0, 0, 3, 1);
+
+        grid.add(new Label("Red"), 0, 1);
+        grid.add(redSlider, 1, 1);
+        grid.add(redValue, 2, 1);
+
+        grid.add(new Label("Green"), 0, 2);
+        grid.add(greenSlider, 1, 2);
+        grid.add(greenValue, 2, 2);
+
+        grid.add(new Label("Blue"), 0, 3);
+        grid.add(blueSlider, 1, 3);
+        grid.add(blueValue, 2, 3);
+
+        grid.add(new Label("Opacity"), 0, 4);
+        grid.add(opacitySlider, 1, 4);
+        grid.add(opacityValue, 2, 4);
+
+        Scene scene = new Scene(grid, 450, 300);
+        primaryStage.setTitle("Color Selector");
